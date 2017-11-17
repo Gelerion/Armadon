@@ -1,0 +1,8 @@
+POST:
+    http://localhost:5555/api/organization/v1/organizations
+    {
+        "name": "Denis",
+        "contactPhone": "123-23-45",
+        "contactName": "Mr. King",
+        "contactEmail": "abc@me.com"
+    }

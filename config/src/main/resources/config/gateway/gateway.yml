@@ -1,0 +1,52 @@
+server:
+  port: 5555
+
+#Configuring the Zuul server to talk to Eureka
+eureka:
+  instance:
+    prefer-ip-address: true
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+#    service-url:
+#      default-zone: http://localhost:8761/eureka/
+
+logging:
+  level:
+    com:
+      netflix: WARN
+      gelerion: DEBUG
+    org:
+      springframework:
+        web: WARN
+
+management:
+  security:
+    enabled: false
+
+
+#When you use automated route mapping where Zuul exposes the service based solely on the Eureka service ID, if
+#no instances of the service are running, Zuul will not expose the route for the service. However, if you manually
+#map a route to a service discovery ID and there are no instances registered with Eureka, Zuul will still show the route
+zuul:
+#  exclude all automated mapping of the Eureka service ID route
+  ignored-services: '*'
+  prefix: /api
+
+  routes:
+   organization: /organization/**
+   licensing: /licensing/**
+
+#Zuul will terminate and return an HTTP 500 error for any call that takes longer than
+hystrix:
+  command:
+#   or licensing/organization instead default for fine grained control
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 2500
+
+#ribbon:
+#  ReadTimeout: 2500
+#  ConnectTimeout: 2500

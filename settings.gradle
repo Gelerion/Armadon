@@ -1,0 +1,10 @@
+rootProject.name='Armadon'
+
+// infrastructure
+includeBuild 'config'
+includeBuild 'registry'
+includeBuild 'gateway'
+
+// services
+includeBuild 'licensing'
+includeBuild 'organization'
