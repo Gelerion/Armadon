@@ -46,6 +46,10 @@ dependencies {
 	compile('org.springframework.cloud:spring-cloud-starter-eureka')
 	compile('org.springframework.cloud:spring-cloud-starter-zuul')
 
+	compile('com.jason-goodwin:better-monads:0.4.0') {
+		exclude module: 'scala-library'
+	}
+
 	compileOnly('org.projectlombok:lombok')
 
 	testCompile('org.springframework.boot:spring-boot-starter-test')

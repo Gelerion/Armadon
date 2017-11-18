@@ -1,3 +1,4 @@
+Hystrix:
 There are four client resiliency patterns:
  - Client-side load balancing
  - Circuit breakers [ensures that a client does not calling repeatedly calling failing service]
