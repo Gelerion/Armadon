@@ -36,6 +36,7 @@ zuul:
   routes:
    organization: /organization/**
    licensing: /licensing/**
+   admin: /admin/**
 
 #Zuul will terminate and return an HTTP 500 error for any call that takes longer than
 hystrix:

@@ -4,6 +4,7 @@ rootProject.name='Armadon'
 includeBuild 'config'
 includeBuild 'registry'
 includeBuild 'gateway'
+includeBuild 'admin'
 
 // services
 includeBuild 'licensing'
