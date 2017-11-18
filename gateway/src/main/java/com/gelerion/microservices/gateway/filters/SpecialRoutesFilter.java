@@ -2,6 +2,8 @@ package com.gelerion.microservices.gateway.filters;
 
 import com.gelerion.microservices.gateway.model.AbTestingRoute;
 import com.gelerion.microservices.gateway.service.RoutesForwarder;
+import com.google.common.base.Supplier;
+import com.google.common.base.Suppliers;
 import com.jasongoodwin.monads.Try;
 import com.jasongoodwin.monads.TryMapFunction;
 import com.netflix.zuul.ZuulFilter;
@@ -17,6 +19,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.Optional;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 /**
  * This filter allow you to do A/B testing of a new version of a service
@@ -29,7 +32,7 @@ public class SpecialRoutesFilter extends ZuulFilter {
     private final FiltersHelper filtersHelper;
     private final RestTemplate rest;
     private final RoutesForwarder routesForwarder;
-    private final DiscoveryClient discoveryClient;
+    private final Supplier<Boolean> shouldFilter;
 
     public SpecialRoutesFilter(FiltersHelper filtersHelper,
                                RestTemplate rest,
@@ -38,7 +41,10 @@ public class SpecialRoutesFilter extends ZuulFilter {
         this.filtersHelper = filtersHelper;
         this.rest = rest;
         this.routesForwarder = routesForwarder;
-        this.discoveryClient = discoveryClient;
+        this.shouldFilter = Suppliers.memoizeWithExpiration(
+                () -> discoveryClient.getServices().contains("specialroutes"),
+                20, TimeUnit.MINUTES
+        );
     }
 
     @Override
@@ -53,8 +59,7 @@ public class SpecialRoutesFilter extends ZuulFilter {
 
     @Override
     public boolean shouldFilter() {
-        //cache
-        return discoveryClient.getServices().contains("specialroutes");
+        return shouldFilter.get();
     }
 
     @Override
@@ -68,7 +73,6 @@ public class SpecialRoutesFilter extends ZuulFilter {
         return null;
     }
 
-    //Note: service must exist
     private Optional<AbTestingRoute> getAbRoutingInfo(String serviceName) {
         return Try.ofFailable(() ->
                     rest.getForEntity("http://specialroutes/v1/route/abtesting/{serviceName}",
