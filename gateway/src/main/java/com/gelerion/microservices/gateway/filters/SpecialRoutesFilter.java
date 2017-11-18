@@ -7,6 +7,7 @@ import com.jasongoodwin.monads.TryMapFunction;
 import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.cloud.netflix.zuul.filters.support.FilterConstants;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
@@ -24,16 +25,20 @@ import java.util.Random;
 @Component
 public class SpecialRoutesFilter extends ZuulFilter {
     private static final int FILTER_ORDER = 1;
-    private static final boolean SHOULD_FILTER = false;
 
     private final FiltersHelper filtersHelper;
     private final RestTemplate rest;
     private final RoutesForwarder routesForwarder;
+    private final DiscoveryClient discoveryClient;
 
-    public SpecialRoutesFilter(FiltersHelper filtersHelper, RestTemplate rest, RoutesForwarder routesForwarder) {
+    public SpecialRoutesFilter(FiltersHelper filtersHelper,
+                               RestTemplate rest,
+                               RoutesForwarder routesForwarder,
+                               DiscoveryClient discoveryClient) {
         this.filtersHelper = filtersHelper;
         this.rest = rest;
         this.routesForwarder = routesForwarder;
+        this.discoveryClient = discoveryClient;
     }
 
     @Override
@@ -48,7 +53,8 @@ public class SpecialRoutesFilter extends ZuulFilter {
 
     @Override
     public boolean shouldFilter() {
-        return SHOULD_FILTER;
+        //cache
+        return discoveryClient.getServices().contains("specialroutes");
     }
 
     @Override
