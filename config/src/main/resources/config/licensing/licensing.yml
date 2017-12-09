@@ -25,3 +25,12 @@ redis:
 
 signing:
   key: "345345fsdfsf5345"
+
+
+security:
+  oauth2:
+    client:
+      clientId: gelerion
+      clientSecret: thisIsSecret
+    resource:
+          user-info-uri: http://localhost:8901/user

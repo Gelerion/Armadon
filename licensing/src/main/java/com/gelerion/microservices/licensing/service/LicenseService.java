@@ -11,10 +11,7 @@ import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @Slf4j
@@ -47,7 +44,8 @@ public class LicenseService {
 
     @HystrixCommand
     private Organization getOrganization(String organizationId) {
-        return organizationClient.getOrganization(organizationId);
+        return Optional.ofNullable(organizationClient.getOrganization(organizationId))
+                .orElse(Organization.EMPTY);
     }
 
     //thread pool size

@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
@@ -13,9 +14,9 @@ import org.springframework.web.client.RestTemplate;
 @Component
 public class OrganizationServiceClient {
 
-    private final RestTemplate rest;
+    private final OAuth2RestTemplate rest;
 
-    public OrganizationServiceClient(RestTemplate rest) {
+    public OrganizationServiceClient(OAuth2RestTemplate rest) {
         this.rest = rest;
     }
 

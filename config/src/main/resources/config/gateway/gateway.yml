@@ -32,6 +32,7 @@ zuul:
 #  exclude all automated mapping of the Eureka service ID route
   ignored-services: '*'
   prefix: /api
+  sensitiveHeaders: Cookie,Set-Cookie
 
   routes:
    organization: /organization/**

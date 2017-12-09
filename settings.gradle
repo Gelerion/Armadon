@@ -5,6 +5,7 @@ includeBuild 'config'
 includeBuild 'registry'
 includeBuild 'gateway'
 includeBuild 'admin'
+includeBuild 'auth'
 
 // services
 includeBuild 'licensing'

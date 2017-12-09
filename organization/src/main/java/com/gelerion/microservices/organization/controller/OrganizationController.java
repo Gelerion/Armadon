@@ -32,7 +32,7 @@ public class OrganizationController {
     }
 
     @PutMapping("/{organizationId}")
-    public void updateOrganization(@PathVariable("organizationId") String orgId,
+    public void updateOrganization(@PathVariable("organizationId") String organizationId,
                                    @RequestBody Organization organization) {
         orgService.updateOrganization(organization);
     }
@@ -44,8 +44,8 @@ public class OrganizationController {
 
     @DeleteMapping("/{organizationId}")
     @ResponseStatus(NO_CONTENT)
-    public void deleteOrganization(@PathVariable("orgId") String orgId,
-                                   @RequestBody Organization organization) {
+    public void deleteOrganization(@PathVariable String organizationId,
+                                   @RequestBody  Organization organization) {
         orgService.deleteOrganization(organization);
     }
 }
