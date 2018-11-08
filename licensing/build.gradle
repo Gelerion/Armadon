@@ -1,18 +1,11 @@
-buildscript {
-	repositories { jcenter() }
-	dependencies {
-		classpath 'se.transmode.gradle:gradle-docker:1.2'
-	}
-}
-
 plugins {
 	id 'org.springframework.boot' version '1.5.8.RELEASE'
+	id "com.bmuschko.docker-remote-api" version "4.0.4"
 }
 
 apply plugin: 'java'
 apply plugin: 'idea'
 apply plugin: 'org.springframework.boot'
-apply plugin: 'docker'
 
 // This is used as the docker image prefix
 group = 'com.gelerion.microservices'
@@ -30,6 +23,7 @@ jar {
 
 repositories {
 	mavenCentral()
+	jcenter()
 }
 
 configurations {
@@ -72,7 +66,7 @@ dependencyManagement {
 }
 
 task wrapper(type: Wrapper) {
-	gradleVersion = '4.2.1'
+	gradleVersion = '4.10.2'
 }
 
 import org.apache.tools.ant.filters.ReplaceTokens
@@ -85,14 +79,22 @@ processResources {
 	filter(ReplaceTokens, tokens: ['jarName': jar.archiveName])
 }
 
-task buildDocker(type: Docker, dependsOn: build)  {
-	applicationName = jar.baseName
-	dockerfile = file('docker/Dockerfile')
-	doFirst {
-		copy {
-			from jar
-			into "${stageDir}/target"
-		}
+task prepareDocker(type: Copy) {
+	from("docker")
+	from("${buildDir}/libs") {
+		include '**/*.jar'
+		rename "licensing-(.*)", 'licensing-server.jar'
 	}
+
+	into "${project.buildDir}/docker"
 }
 
+build.finalizedBy prepareDocker
+
+//https://bmuschko.github.io/gradle-docker-plugin/
+import com.bmuschko.gradle.docker.tasks.image.*
+task buildMyAppImage(type: DockerBuildImage) {
+	dependsOn build
+	inputDir = file("${project.buildDir}/docker")
+	tag = 'licensing-server-image:latest'
+}

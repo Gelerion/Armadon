@@ -1,5 +1,6 @@
 plugins {
 	id 'org.springframework.boot' version '1.5.8.RELEASE'
+	id "com.bmuschko.docker-remote-api" version "4.0.4"
 }
 
 apply plugin: 'java'
@@ -21,6 +22,7 @@ jar {
 
 repositories {
 	mavenCentral()
+	jcenter()
 }
 
 configurations {
@@ -40,8 +42,8 @@ dependencies {
 	//cloud
 	compile('org.springframework.cloud:spring-cloud-security') //brings in the general Spring and Spring Cloud security libraries
 
-	//compile('org.springframework.cloud:spring-cloud-starter-config')
-	//compile('org.springframework.cloud:spring-cloud-config-client')
+	compile('org.springframework.cloud:spring-cloud-starter-config')
+	compile('org.springframework.cloud:spring-cloud-config-client')
 
 	//compile('org.springframework.cloud:spring-cloud-starter-eureka')
 
@@ -57,5 +59,25 @@ dependencyManagement {
 }
 
 task wrapper(type: Wrapper) {
-	gradleVersion = '4.2.1'
+	gradleVersion = '4.10.2'
+}
+
+task prepareDocker(type: Copy) {
+	from("docker")
+	from("${buildDir}/libs") {
+		include '**/*.jar'
+		rename "auth-(.*)", 'auth-server.jar'
+	}
+
+	into "${project.buildDir}/docker"
+}
+
+build.finalizedBy prepareDocker
+
+//https://bmuschko.github.io/gradle-docker-plugin/
+import com.bmuschko.gradle.docker.tasks.image.*
+task buildImage(type: DockerBuildImage) {
+	dependsOn build
+	inputDir = file("${project.buildDir}/docker")
+	tags = ['auth-server-image:latest']
 }

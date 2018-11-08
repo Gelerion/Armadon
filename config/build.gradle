@@ -1,5 +1,6 @@
 plugins {
 	id 'org.springframework.boot' version '1.5.8.RELEASE'
+	id "com.bmuschko.docker-remote-api" version "4.0.4"
 }
 
 apply plugin: 'java'
@@ -12,11 +13,14 @@ sourceCompatibility = 1.8
 
 repositories {
 	mavenCentral()
+    jcenter()
 }
 
 
 ext {
 	springCloudVersion = 'Dalston.SR4'
+    mainClassName = 'com.gelerion.microservices.config.ConfigApplication'
+    containerName = 'config-server'
 }
 
 configurations {
@@ -37,6 +41,59 @@ dependencyManagement {
 	}
 }
 
+bootRepackage{
+    enabled = true
+}
+
+springBoot {
+    mainClass = "${mainClassName}"
+}
+
+bootRun {
+    addResources = true
+}
+
 task wrapper(type: Wrapper) {
-	gradleVersion = '4.2.1'
+	gradleVersion = '4.10.2'
+}
+
+//noinspection GroovyAssignabilityCheck
+task prepareDocker(type: Copy) {
+    from("docker")
+    from("${buildDir}/libs") {
+        include '**/*.jar'
+        rename "config-(.*)", 'config-server.jar'
+    }
+
+    into "${project.buildDir}/docker"
+}
+
+build.finalizedBy prepareDocker
+
+//https://bmuschko.github.io/gradle-docker-plugin/
+import com.bmuschko.gradle.docker.tasks.image.*
+import com.bmuschko.gradle.docker.tasks.container.*
+
+task buildImage(type: DockerBuildImage) {
+    dependsOn build
+    inputDir = file("${project.buildDir}/docker")
+    tags = ['config-server-image:latest']
+}
+
+task removeContainer(type: DockerRemoveContainer) {
+    targetContainerId "${containerName}"
+    onError { exception ->
+        // Ignore exception if container does not exist otherwise throw it
+        if (!exception.message.contains('No such container')) throw exception
+    }
+}
+
+task createContainer(type: DockerCreateContainer) {
+    dependsOn buildImage
+//    targetImageId buildImage.getImageId()
+    containerName = 'config-server'
+    imageId = 'config-server-image'
+    portBindings = ['8888:8888']
+    network = 'gelerion-net'
+    autoRemove = true
 }

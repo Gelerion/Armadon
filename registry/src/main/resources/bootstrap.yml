@@ -5,7 +5,7 @@ spring:
     active: default
   cloud:
     config:
-      uri: http://localhost:8888
+      uri: http://config-server:8888
       fail-fast: true
 
 eureka:
@@ -18,7 +18,7 @@ eureka:
     #attribute is set to false so that when the Eureka service starts, it doesn't try to cache its registry information locally
     fetch-registry: false
     service-url:
-         defaultZone: http://localhost:8761/eureka/
+         defaultZone: http://registry-server:8761/eureka/
   server:
     #inital time to wait before server takes requests
     wait-time-in-ms-when-sync-empty: 5

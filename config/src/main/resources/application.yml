@@ -17,5 +17,6 @@ spring:
                             classpath:config/organization,
                             classpath:config/registry,
                             classpath:config/gateway,
+                            classpath:config/auth,
                             classpath:config/admin,
 #         search-locations: file://<chapter_2>/config/src/main/resources/config/licensing

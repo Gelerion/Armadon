@@ -35,6 +35,19 @@ dependencyManagement {
 }
 
 task wrapper(type: Wrapper) {
-	gradleVersion = '4.2.1'
+	gradleVersion = '4.10.2'
 }
+
+//noinspection GroovyAssignabilityCheck
+task prepareDocker(type: Copy) {
+	from("docker")
+	from("${buildDir}/libs") {
+		include '**/*.jar'
+		rename "registry-(.*)", 'registry-server.jar'
+	}
+
+	into "${project.buildDir}/docker"
+}
+
+build.finalizedBy prepareDocker
 

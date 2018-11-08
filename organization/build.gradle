@@ -1,20 +1,12 @@
-buildscript {
-	repositories { jcenter() }
-	dependencies {
-		classpath 'se.transmode.gradle:gradle-docker:1.2'
-	}
-}
-
 plugins {
 	id 'org.springframework.boot' version '1.5.8.RELEASE'
+	id "com.bmuschko.docker-remote-api" version "4.0.4"
 }
 
 apply plugin: 'java'
 apply plugin: 'idea'
 apply plugin: 'org.springframework.boot'
-apply plugin: 'docker'
 
-// This is used as the docker image prefix
 group = 'com.gelerion.microservices.organization'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = 1.8
@@ -24,12 +16,13 @@ ext {
 }
 
 jar {
-	baseName = 'licensing'
+	baseName = 'organization'
 	version = '0.1.0'
 }
 
 repositories {
 	mavenCentral()
+	jcenter()
 }
 
 configurations {
@@ -72,7 +65,7 @@ dependencyManagement {
 }
 
 task wrapper(type: Wrapper) {
-	gradleVersion = '4.2.1'
+	gradleVersion = '4.10.2'
 }
 
 import org.apache.tools.ant.filters.ReplaceTokens
@@ -85,14 +78,44 @@ processResources {
 	filter(ReplaceTokens, tokens: ['jarName': jar.archiveName])
 }
 
-task buildDocker(type: Docker, dependsOn: build)  {
-	applicationName = jar.baseName
-	dockerfile = file('docker/Dockerfile')
-	doFirst {
-		copy {
-			from jar
-			into "${stageDir}/target"
-		}
+
+//noinspection GroovyAssignabilityCheck
+task prepareDocker(type: Copy) {
+	from("docker")
+	from("${buildDir}/libs") {
+		include '**/*.jar'
+		rename "organization-(.*)", 'organization-server.jar'
 	}
+
+	into "${project.buildDir}/docker"
 }
 
+build.finalizedBy prepareDocker
+
+//https://bmuschko.github.io/gradle-docker-plugin/
+import com.bmuschko.gradle.docker.tasks.image.*
+import com.bmuschko.gradle.docker.tasks.container.*
+
+task buildImage(type: DockerBuildImage) {
+	dependsOn build
+	inputDir = file("${project.buildDir}/docker")
+	tags = ['organization-server-image:latest']
+}
+
+//task removeContainer(type: DockerRemoveContainer) {
+//	targetContainerId "${containerName}"
+//	onError { exception ->
+//		// Ignore exception if container does not exist otherwise throw it
+//		if (!exception.message.contains('No such container')) throw exception
+//	}
+//}
+
+task createContainer(type: DockerCreateContainer) {
+	dependsOn buildImage
+//    targetImageId buildImage.getImageId()
+	containerName = 'organization-server'
+	imageId = 'organization-server-image'
+	portBindings = ['8081:8081']
+	network = 'gelerion-net'
+	autoRemove = true
+}

@@ -1,11 +1,14 @@
-#FROM openjdk:8-jdk-alpine
-##RUN apk update && apk upgrade && apk netcat-openbsd
-#COPY @jarName@ @jarName@
-#CMD java -jar @jarName@
-#EXPOSE 8080
-
 FROM openjdk:8-jdk-alpine
-#VOLUME /tmp
-ADD target/organization-0.1.0.jar app.jar
-ENV JAVA_OPTS=""
-ENTRYPOINT exec java $JAVA_OPTS -Djava.security.egd=file:/dev/./urandom -jar /app.jar
+
+RUN addgroup -S gelerion && adduser -S -G gelerion gelerion
+
+ENV APP_HOME /app
+ENV JAVA_OPTS = "-Xmx200m -Djava.security.egd=file:/dev/./urandom"
+
+WORKDIR ${APP_HOME}
+COPY /gateway-server.jar ${APP_HOME}
+
+EXPOSE 5555
+
+USER gelerion
+CMD ["java", "-jar", "gateway-server.jar"]

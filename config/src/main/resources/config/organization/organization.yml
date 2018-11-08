@@ -4,6 +4,15 @@ server:
 example:
   property: "I AM IN THE DEFAULT"
 
+eureka:
+  instance:
+    prefer-ip-address: true
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    serviceUrl:
+      defaultZone: http://registry-server:8761/eureka/
+
 spring:
   jpa:
     database: "h2"
@@ -26,7 +35,7 @@ spring:
 security:
   oauth2:
     resource:
-      user-info-uri: http://localhost:8901/user
+      user-info-uri: http://auth-server:8901/user
 
 logging:
   level:

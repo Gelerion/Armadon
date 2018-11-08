@@ -6,10 +6,9 @@ ENV APP_HOME /app
 ENV JAVA_OPTS = "-Xmx200m -Djava.security.egd=file:/dev/./urandom"
 
 WORKDIR ${APP_HOME}
-COPY /organization-server.jar ${APP_HOME}
+COPY /auth-server.jar ${APP_HOME}
 
-EXPOSE 8081
+EXPOSE 8901
 
 USER gelerion
-#CMD ["java", "-jar", "$JAVA_OPTS", "organization-server.jar"]
-CMD ["java", "-jar", "organization-server.jar"]
+CMD ["java", "-jar", "auth-server.jar"]

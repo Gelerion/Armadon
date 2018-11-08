@@ -3,12 +3,9 @@ package com.gelerion.microservices.licensing.client;
 import com.gelerion.microservices.licensing.domain.model.Organization;
 import com.gelerion.microservices.licensing.monitor.filter.UserContextHolder;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.RestTemplate;
 
 @Slf4j
 @Component
