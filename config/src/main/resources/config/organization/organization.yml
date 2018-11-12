@@ -45,3 +45,7 @@ logging:
     org:
       springframework:
         web: WARN
+
+management:
+  security:
+    enabled: false

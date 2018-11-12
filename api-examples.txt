@@ -1,0 +1,6 @@
+Gateway:
+ organization-server:
+    {{ url  }}:5555/api/organization/v1/organizations/
+
+Auth-server:
+    {{ url  }}:8901/oauth/token

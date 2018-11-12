@@ -1,5 +1,3 @@
-https://speakerdeck.com/coollog/build-containers-faster-with-jib-a-google-image-build-tool-for-java-applications
-
 Armadon setup
 1. prepareDocker (gradle)
 2. docket build -t TAG .
@@ -8,24 +6,31 @@ Armadon setup
 
 
 -- config server
--- cd D:/Java/Learning/Armadon/config/build/docker
+-- cd Armadon/config/build/docker
  -- docker build -t config-server-image .
 docker run -dit --name config-server -p 8888:8888 --network gelerion-net config-server-image
 
 -- registry-server
--- cd D:/Java/Learning/Armadon/registry/build/docker
+-- cd Armadon/registry/build/docker
  -- docker build -t registry-server-image .
 docker run -dit --name registry-server -p 8761:8761 --network gelerion-net registry-server-image
 
 -- gateway server
--- cd D:/Java/Learning/Armadon/gateway/build/docker
+-- cd Armadon/gateway/build/docker
  -- docker build -t gateway-server-image .
 docker run -dit --name gateway-server -p 5555:5555 --network gelerion-net gateway-server-image
 
 -- auth server
--- cd D:/Java/Learning/Armadon/auth/build/docker
+-- cd Armadon/auth/build/docker
   -- docker build -t auth-server-image .
 docker run -dit --name auth-server -p 8901:8901 --network gelerion-net auth-server-image
 
-docker-compose:
-    for windows users: dos2unix wait-for.sh
+-- organization server
+-- cd Armadon/organization/build/docker
+ -- docker build -t organization-server-image .
+docker run -dit --name organization-server -p 8081:8081 --network gelerion-net organization-server-image
+
+-- licensing server
+-- cd Armadon/licensing/build/docker
+ -- docker build -t licensing-server-image .
+docker run -dit --name licensing-server -p 8082:8082 --network gelerion-net licensing-server-image

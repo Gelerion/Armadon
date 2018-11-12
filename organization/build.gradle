@@ -78,7 +78,6 @@ processResources {
 	filter(ReplaceTokens, tokens: ['jarName': jar.archiveName])
 }
 
-
 //noinspection GroovyAssignabilityCheck
 task prepareDocker(type: Copy) {
 	from("docker")

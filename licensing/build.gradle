@@ -93,8 +93,8 @@ build.finalizedBy prepareDocker
 
 //https://bmuschko.github.io/gradle-docker-plugin/
 import com.bmuschko.gradle.docker.tasks.image.*
-task buildMyAppImage(type: DockerBuildImage) {
+task buildImage(type: DockerBuildImage) {
 	dependsOn build
 	inputDir = file("${project.buildDir}/docker")
-	tag = 'licensing-server-image:latest'
+	tags = ['licensing-server-image:latest']
 }

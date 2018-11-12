@@ -1,0 +1,29 @@
+version: "3"
+
+services:
+  config-server:
+    build:
+      context: config/build/docker
+    image: config-server-image:latest
+    restart: unless-stopped
+    networks:
+      - gelerion-net
+    ports:
+      - "8888:8888"
+
+  registry-server:
+    build:
+      context: registry/build/docker
+    image: registry-server-image:latest
+    restart: unless-stopped
+    networks:
+    - gelerion-net
+    ports:
+    - "8761:8761"
+    command: ["./wait-for.sh","config-server:8888","-t", "120", "--", "java", "-jar", "registry-server.jar"]
+    depends_on:
+      - "config-server"
+
+networks:
+  gelerion-net:
+    driver: bridge

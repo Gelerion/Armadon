@@ -22,6 +22,10 @@ public class AuthenticationApplication {
         SpringApplication.run(AuthenticationApplication.class, args);
     }
 
+    //https://bitbucket.org/rlippolis/cloud-security-example/src/aabcac9a80b3146c90a88fe84073c51083048143?at=master
+    //https://blog.jdriven.com/2016/09/securing-application-landscape-spring-cloud-security-part-1/
+    //https://www.future-processing.pl/blog/exploring-spring-boot-and-spring-security-custom-token-based-authentication-of-rest-services-with-spring-security-and-pinch-of-spring-java-configuration-and-spring-integration-testing/
+
     @GetMapping(value = {"/user"}, produces = "application/json")
     public Map<String, Object> user(OAuth2Authentication user) {
         HashMap<String, Object> userInfo = new HashMap<>();

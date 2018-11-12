@@ -6,9 +6,9 @@ ENV APP_HOME /app
 ENV JAVA_OPTS = "-Xmx200m -Djava.security.egd=file:/dev/./urandom"
 
 WORKDIR ${APP_HOME}
-COPY /gateway-server.jar ${APP_HOME}
+COPY /licensing-server.jar ${APP_HOME}
 
-EXPOSE 5555
+EXPOSE 8082
 
 USER gelerion
-CMD ["java", "-jar", "${JAVA_OPTS}", "licensing-server.jar"]
+CMD ["java", "-jar", "licensing-server.jar"]
