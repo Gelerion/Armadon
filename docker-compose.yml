@@ -17,12 +17,64 @@ services:
     image: registry-server-image:latest
     restart: unless-stopped
     networks:
-    - gelerion-net
+      - gelerion-net
     ports:
-    - "8761:8761"
+      - "8761:8761"
     command: ["./wait-for.sh","config-server:8888","-t", "120", "--", "java", "-jar", "registry-server.jar"]
     depends_on:
       - "config-server"
+
+  gateway-server:
+    build:
+      context: gateway/build/docker
+    image: gateway-server-image:latest
+    restart: unless-stopped
+    networks:
+      - gelerion-net
+    ports:
+      - "5555:5555"
+    command: ["./wait-for.sh","config-server:8888","-t", "120", "--", "java", "-jar", "gateway-server.jar"]
+    depends_on:
+      - "config-server"
+
+  auth-server:
+    build:
+      context: auth/build/docker
+    image: auth-server-image:latest
+    restart: unless-stopped
+    networks:
+      - gelerion-net
+    ports:
+      - "8901:8901"
+    command: ["./wait-for.sh","config-server:8888","-t", "120", "--", "java", "-jar", "auth-server.jar"]
+    depends_on:
+      - "config-server"
+
+  organization-server:
+    build:
+      context: organization/build/docker
+    image: organization-server-image:latest
+    restart: unless-stopped
+    networks:
+    - gelerion-net
+    ports:
+    - "8081:8081"
+    command: ["./wait-for.sh","config-server:8888","-t", "120", "--", "java", "-jar", "organization-server.jar"]
+    depends_on:
+    - "config-server"
+
+  licensing-server:
+    build:
+      context: licensing/build/docker
+    image: licensing-server-image:latest
+    restart: unless-stopped
+    networks:
+    - gelerion-net
+    ports:
+    - "8082:8082"
+    command: ["./wait-for.sh","config-server:8888","-t", "120", "--", "java", "-jar", "licensing-server.jar"]
+    depends_on:
+    - "config-server"
 
 networks:
   gelerion-net:

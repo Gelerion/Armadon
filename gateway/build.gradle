@@ -88,5 +88,5 @@ import com.bmuschko.gradle.docker.tasks.image.*
 task buildMyAppImage(type: DockerBuildImage) {
 	dependsOn build
 	inputDir = file("${project.buildDir}/docker")
-	tag = 'gateway-server-image:latest'
+	tags = ['gateway-server-image:latest']
 }
