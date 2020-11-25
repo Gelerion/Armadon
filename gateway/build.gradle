@@ -32,21 +32,23 @@ configurations {
 }
 
 dependencies {
-	implementation('org.springframework.boot:spring-boot-starter-log4j2')
+//	compile('org.springframework.boot:spring-boot-starter-web')
+
+	compile('org.springframework.boot:spring-boot-starter-log4j2')
 
 	//cloud
-	implementation('org.springframework.cloud:spring-cloud-starter-config')
-	implementation('org.springframework.cloud:spring-cloud-config-client')
+	compile('org.springframework.cloud:spring-cloud-starter-config')
+	compile('org.springframework.cloud:spring-cloud-config-client')
 
-	implementation('org.springframework.cloud:spring-cloud-starter-eureka')
-	implementation('org.springframework.cloud:spring-cloud-starter-zuul')
+	compile('org.springframework.cloud:spring-cloud-starter-eureka')
+	compile('org.springframework.cloud:spring-cloud-starter-zuul')
 
-	implementation('com.google.guava:guava')
-	implementation('com.jason-goodwin:better-monads:0.4.0') {
+	compile('com.google.guava:guava')
+	compile('com.jason-goodwin:better-monads:0.4.0') {
 		exclude module: 'scala-library'
 	}
 
-	implementation('org.apache.httpcomponents:httpclient')
+	compile('org.apache.httpcomponents:httpclient')
 
 	compileOnly('org.projectlombok:lombok')
 
@@ -73,7 +75,7 @@ processResources {
 task prepareDocker(type: Copy) {
 	from("docker")
 	from("${buildDir}/libs") {
-		include '**/*.jar'
+		include "**/*.jar"
 		rename "gateway-(.*)", 'gateway-server.jar'
 	}
 

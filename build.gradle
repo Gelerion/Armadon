@@ -1,10 +1,12 @@
+//https://discuss.gradle.org/t/how-does-a-composite-build-ensure-that-one-included-build-is-built-before-another/27711/3
+
 tasks.register('build') {
   gradle.includedBuilds.each { build ->
     dependsOn gradle.includedBuild(build.name).task(":build")
   }
 }
 
-tasks.register('buildImage') {
+tasks.register('buildImages') {
   gradle.includedBuilds.findAll{it.name != "admin"}.each { build ->
     dependsOn gradle.includedBuild(build.name).task(":buildImage")
   }

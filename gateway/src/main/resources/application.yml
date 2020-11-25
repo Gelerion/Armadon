@@ -1,2 +1,11 @@
 # Configuring the Zuul server to talk to Eureka
 # via config server
+
+logging:
+  level:
+    com:
+      netflix: WARN
+      gelerion: DEBUG
+    org:
+      springframework:
+        web: WARN
