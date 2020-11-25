@@ -1,6 +1,6 @@
 plugins {
 	id 'org.springframework.boot' version '1.5.8.RELEASE'
-	id "com.bmuschko.docker-remote-api" version "4.0.4"
+	id "com.bmuschko.docker-remote-api" version "6.6.1"
 }
 
 apply plugin: 'java'
@@ -53,10 +53,6 @@ bootRun {
     addResources = true
 }
 
-task wrapper(type: Wrapper) {
-	gradleVersion = '4.10.2'
-}
-
 //noinspection GroovyAssignabilityCheck
 task prepareDocker(type: Copy) {
     from("docker")
@@ -75,9 +71,9 @@ import com.bmuschko.gradle.docker.tasks.image.*
 import com.bmuschko.gradle.docker.tasks.container.*
 
 task buildImage(type: DockerBuildImage) {
-    dependsOn build
-    inputDir = file("${project.buildDir}/docker")
-    tags = ['config-server-image:latest']
+  dependsOn build
+  inputDir = file("${project.buildDir}/docker")
+  images.add('config-server-image:latest')
 }
 
 task removeContainer(type: DockerRemoveContainer) {
@@ -88,12 +84,12 @@ task removeContainer(type: DockerRemoveContainer) {
     }
 }
 
-task createContainer(type: DockerCreateContainer) {
-    dependsOn buildImage
-//    targetImageId buildImage.getImageId()
-    containerName = 'config-server'
-    imageId = 'config-server-image'
-    portBindings = ['8888:8888']
-    network = 'gelerion-net'
-    autoRemove = true
-}
+//task createContainer(type: DockerCreateContainer) {
+//    dependsOn buildImage
+////    targetImageId buildImage.getImageId()
+//    containerName = 'config-server'
+//    imageId = 'config-server-image'
+//    portBindings = ['8888:8888']
+//    network = 'gelerion-net'
+//    autoRemove = true
+//}

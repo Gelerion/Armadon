@@ -1,6 +1,6 @@
 plugins {
 	id 'org.springframework.boot' version '1.5.8.RELEASE'
-	id "com.bmuschko.docker-remote-api" version "4.0.4"
+	id "com.bmuschko.docker-remote-api" version "6.6.1"
 }
 
 apply plugin: 'java'
@@ -58,10 +58,6 @@ dependencyManagement {
 	}
 }
 
-task wrapper(type: Wrapper) {
-	gradleVersion = '4.10.2'
-}
-
 task prepareDocker(type: Copy) {
 	from("docker")
 	from("${buildDir}/libs") {
@@ -79,5 +75,5 @@ import com.bmuschko.gradle.docker.tasks.image.*
 task buildImage(type: DockerBuildImage) {
 	dependsOn build
 	inputDir = file("${project.buildDir}/docker")
-	tags = ['auth-server-image:latest']
+	images.add('auth-server-image:latest')
 }

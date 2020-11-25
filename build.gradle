@@ -1,0 +1,10 @@
+tasks.register('setGradleVersion') {
+  gradle.includedBuilds.each { build ->
+    dependsOn gradle.includedBuild(build.name).task(':wrapper')
+  }
+}
+
+wrapper {
+  gradleVersion = '6.7.1'
+  distributionUrl = distributionUrl.replace("bin", "all")
+}
