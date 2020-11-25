@@ -1,3 +1,9 @@
+tasks.register('build') {
+  gradle.includedBuilds.each { build ->
+    dependsOn gradle.includedBuild(build.name).task(":build")
+  }
+}
+
 tasks.register('setGradleVersion') {
   gradle.includedBuilds.each { build ->
     dependsOn gradle.includedBuild(build.name).task(':wrapper')

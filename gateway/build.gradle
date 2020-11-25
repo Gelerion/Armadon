@@ -1,6 +1,7 @@
 plugins {
 	id 'org.springframework.boot' version '1.5.8.RELEASE'
 	id "com.bmuschko.docker-remote-api" version "6.6.1"
+	id "io.freefair.lombok" version "5.3.0"
 }
 
 apply plugin: 'java'
@@ -31,19 +32,21 @@ configurations {
 }
 
 dependencies {
-	compile('org.springframework.boot:spring-boot-starter-log4j2')
+	implementation('org.springframework.boot:spring-boot-starter-log4j2')
 
 	//cloud
-	compile('org.springframework.cloud:spring-cloud-starter-config')
-	compile('org.springframework.cloud:spring-cloud-config-client')
+	implementation('org.springframework.cloud:spring-cloud-starter-config')
+	implementation('org.springframework.cloud:spring-cloud-config-client')
 
-	compile('org.springframework.cloud:spring-cloud-starter-eureka')
-	compile('org.springframework.cloud:spring-cloud-starter-zuul')
+	implementation('org.springframework.cloud:spring-cloud-starter-eureka')
+	implementation('org.springframework.cloud:spring-cloud-starter-zuul')
 
-	compile('com.google.guava:guava')
-	compile('com.jason-goodwin:better-monads:0.4.0') {
+	implementation('com.google.guava:guava')
+	implementation('com.jason-goodwin:better-monads:0.4.0') {
 		exclude module: 'scala-library'
 	}
+
+	implementation('org.apache.httpcomponents:httpclient')
 
 	compileOnly('org.projectlombok:lombok')
 
