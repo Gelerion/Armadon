@@ -4,6 +4,12 @@ tasks.register('build') {
   }
 }
 
+tasks.register('buildImage') {
+  gradle.includedBuilds.findAll{it.name != "admin"}.each { build ->
+    dependsOn gradle.includedBuild(build.name).task(":buildImage")
+  }
+}
+
 tasks.register('setGradleVersion') {
   gradle.includedBuilds.each { build ->
     dependsOn gradle.includedBuild(build.name).task(':wrapper')

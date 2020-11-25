@@ -1,5 +1,6 @@
 plugins {
 	id 'org.springframework.boot' version '1.5.8.RELEASE'
+	id "com.bmuschko.docker-remote-api" version "6.6.1"
 }
 
 apply plugin: 'java'
@@ -48,3 +49,10 @@ task prepareDocker(type: Copy) {
 
 build.finalizedBy prepareDocker
 
+import com.bmuschko.gradle.docker.tasks.image.*
+
+task buildImage(type: DockerBuildImage) {
+	dependsOn build
+	inputDir = file("${project.buildDir}/docker")
+	images.add('registry-server-image:latest')
+}
