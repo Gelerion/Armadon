@@ -1,26 +1,34 @@
+buildscript {
+  dependencies {
+    classpath "io.spring.gradle:dependency-management-plugin:1.0.11.RELEASE"
+  }
+}
+
 plugins {
-	id 'org.springframework.boot' version '1.5.8.RELEASE'
-	id "com.bmuschko.docker-remote-api" version "6.6.1"
+	id 'org.springframework.boot' version '2.5.6'
+//	id "com.bmuschko.docker-spring-boot-application" version "6.7.0"
+	id "com.bmuschko.docker-remote-api" version "6.7.0"
 }
 
 apply plugin: 'java'
 apply plugin: 'idea'
-apply plugin: 'org.springframework.boot'
+//apply plugin: 'org.springframework.boot'
+apply plugin: "io.spring.dependency-management"
+//apply plugin: 'com.bmuschko.docker-spring-boot-application'
 
-group = 'com.gelerion.microservices'
+group = 'com.gelerion.microservices.config'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = 1.8
 
 repositories {
 	mavenCentral()
-  jcenter()
 }
 
 
 ext {
-	springCloudVersion = 'Dalston.SR4'
-    mainClassName = 'com.gelerion.microservices.config.ConfigApplication'
-    containerName = 'config-server'
+	springCloudVersion = '2020.0.3'
+  mainClassName = 'com.gelerion.microservices.config.ConfigApplication'
+  containerName = 'config-server'
 }
 
 configurations {
@@ -28,11 +36,11 @@ configurations {
 }
 
 dependencies {
-	compile('org.springframework.cloud:spring-cloud-starter-config')
-	compile('org.springframework.cloud:spring-cloud-config-server')
-	compile('org.springframework.boot:spring-boot-starter-log4j2')
+  implementation('org.springframework.cloud:spring-cloud-starter-config')
+  implementation('org.springframework.cloud:spring-cloud-config-server')
+  implementation('org.springframework.boot:spring-boot-starter-log4j2')
 
-	testCompile('org.springframework.boot:spring-boot-starter-test')
+  testImplementation('org.springframework.boot:spring-boot-starter-test')
 }
 
 dependencyManagement {
@@ -41,16 +49,19 @@ dependencyManagement {
 	}
 }
 
-bootRepackage{
-    enabled = true
-}
-
 springBoot {
-    mainClass = "${mainClassName}"
+  mainClass = "${mainClassName}"
 }
 
-bootRun {
-    addResources = true
+//bootJar {
+//  mainClass = "${mainClassName}"
+//
+//  enabled = false
+//  classifier = 'boot'
+//}
+
+test {
+  useJUnitPlatform()
 }
 
 //noinspection GroovyAssignabilityCheck
@@ -62,6 +73,8 @@ task prepareDocker(type: Copy) {
     }
 
     into "${project.buildDir}/docker"
+
+   duplicatesStrategy = DuplicatesStrategy.INCLUDE
 }
 
 build.finalizedBy prepareDocker

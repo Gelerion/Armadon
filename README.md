@@ -79,3 +79,6 @@ docker run -dit --name auth-server -p 8901:8901 --network gelerion-net auth-serv
 
 docker-compose:
     for windows users: dos2unix wait-for.sh
+
+### To change the Gradle version
+1. Changel the gradle version
